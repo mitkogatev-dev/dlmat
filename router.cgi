@@ -25,12 +25,20 @@ for my $key ( $cgi->param() ) {
 }
 my $html=""; 
 require "$dir/config.pl";
+require "$dir/strings.pl";
+require "$dir/device.pl";
 #
 my $cfg=Cfg::get_config();
 my $debug=Cfg::get_debug();
 
 if($request_method eq "POST"){
-$html="POST";
+    if($input{devices}){
+        # $html=Strings::add_dev_form();
+        $html=Device::handle();
+    }
+    else{
+        $html="POST";
+    }
 }elsif($request_method eq "GET"){
 $html="GET";
 }else{
