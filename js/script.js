@@ -20,15 +20,18 @@ function handleIntNum(){
         const checkElem = checkArr[i];
         nums.push(i+1+'');
         checkElem.addEventListener("change", function() {
-            const numInput=this.closest('tr').querySelector('[name=int_number]');
-            const nameInput=this.closest('tr').querySelector('[name=int_name]');
+            const numInput=this.closest('tr').querySelector('[name^=int_number]');
+            const nameInput=this.closest('tr').querySelector('[name^=int_name]');
+            const numVal=this.closest('tr').querySelector('.num_val');
             if(this.checked){
              numInput.value=nums.sort().shift();
              nameInput.value="Port "+numInput.value;
+             numVal.innerHTML=numInput.value;
             }else{
              nums.unshift(numInput.value);
              numInput.value="";
              nameInput.value="";
+             numVal.innerHTML="";
             }
         });
     }

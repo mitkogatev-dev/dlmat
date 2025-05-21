@@ -43,12 +43,12 @@ sub create{
         <th>name</th>
         </tr>
         );
-    for(my $i = 0; $i < $int_count; $i++){
+    for(my $i = 1; $i <= $int_count; $i++){
         $result.=qq(
             <tr>
             <td><input type="checkbox" name="sel" /></td>
-            <td><input type="number" name="int_number" disabled /></td>
-            <td><input type="text" name="int_name" /></td>
+            <td><input type="hidden" name="int_number[$i]"/><span class="num_val"></span></td>
+            <td><input type="text" name="int_name[$i]" /></td>
             </tr>
             );
     }
@@ -61,7 +61,8 @@ sub create{
     return $result;
 }
 sub add_dev_form{
-    my $txt=qq(<form action="" method="post">);
+    my $txt="<h4>Create new device</h4>";
+    $txt.=qq(<form action="" method="post">);
     $txt.=qq(
         <input type="hidden" name="devices" value="devices">
         <label for="device_name" >Name:</label>
