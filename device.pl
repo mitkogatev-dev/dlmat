@@ -33,6 +33,7 @@ sub create{
     my $result="<p>created device: $name</p>";
     $result.=qq(
         <h4>Create interfaces for $name</h4>
+        <button onclick="selAll()">(de)Select all</button>
         <form method="post">
         <input type="hidden" name="devices" value="devices">
         <table>

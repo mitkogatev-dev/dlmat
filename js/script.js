@@ -6,6 +6,13 @@ obj.style.height = obj.contentWindow.document.body.scrollHeight+200 + 'px';
 // console.log(obj.contentWindow.document.body.scrollHeight);                                                                                                  
  }
 
+function selAll(){
+    const checkArr = document.querySelectorAll("input[type=checkbox]");
+    checkArr.forEach(function(elem) {
+        elem.click();
+    });
+}
+
 function handleIntNum(){
     const checkArr = document.querySelectorAll("input[type=checkbox]");
     let nums=[];
