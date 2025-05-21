@@ -7,36 +7,22 @@ obj.style.height = obj.contentWindow.document.body.scrollHeight+200 + 'px';
  }
 
 function handleIntNum(){
-    const elemArr = document.querySelectorAll("input[type=checkbox]");
-    console.log(elemArr);
+    const checkArr = document.querySelectorAll("input[type=checkbox]");
     let nums=[];
-    for (let i = 0; i < elemArr.length; i++) {
-        const elem = elemArr[i];
+    for (let i = 0; i < checkArr.length; i++) {
+        const checkElem = checkArr[i];
         nums.push(i+1+'');
-        elem.addEventListener("change", function() {
-            const intEl=this.closest('tr').querySelector('[name=int_number]');
+        checkElem.addEventListener("change", function() {
+            const numInput=this.closest('tr').querySelector('[name=int_number]');
+            const nameInput=this.closest('tr').querySelector('[name=int_name]');
             if(this.checked){
-            //  console.log("checked");
-             intEl.value=nums.sort().shift();
-    // console.log(nums);
-
+             numInput.value=nums.sort().shift();
+             nameInput.value="Port "+numInput.value;
             }else{
-            //  console.log("unchecked");
-             nums.unshift(intEl.value);
-             intEl.value="";
-    // console.log(nums);
-
+             nums.unshift(numInput.value);
+             numInput.value="";
+             nameInput.value="";
             }
-         });
+        });
     }
-    console.log(nums);
-    // elemArr.forEach(function(elem) {
-    //     elem.addEventListener("change", function() {
-    //        if(this.checked){
-    //         console.log("checked");
-    //        }else{
-    //         console.log("unchecked");
-    //        }
-    //     });
-    // });
 }
