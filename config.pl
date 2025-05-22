@@ -17,7 +17,7 @@ my %sql_config = (
     sql_port => "3306",
     sql_user => "myuser",
     sql_pass => "fakepassword",
-    sql_db => "graphs"
+    sql_db => "dlmat"
 );
 
 my %debug_config = (

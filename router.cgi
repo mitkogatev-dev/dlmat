@@ -11,7 +11,7 @@ my $start_run=time();
 my $dir=$RealBin;
 my $clip=$ENV{REMOTE_ADDR};
 our %input;
-my $cgi = new CGI;
+our $cgi = new CGI;
 $cgi->charset('utf-8');
 $CGI::LIST_CONTEXT_WARN = 0 ;
 my @params=$cgi->param();
@@ -25,6 +25,7 @@ for my $key ( $cgi->param() ) {
 }
 my $html=""; 
 require "$dir/config.pl";
+require "$dir/service.pl";
 require "$dir/strings.pl";
 require "$dir/device.pl";
 #

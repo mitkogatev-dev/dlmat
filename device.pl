@@ -17,25 +17,29 @@ sub handle{
     if($input->{add_dev}){
         return &add_dev_form();
     }
-    elsif($input->{create_device}){
-        return &create();
+    elsif($input->{create_dev_btn}){
+        return &create_device();
+    }
+    elsif($input->{create_int_btn}){
+        my $created=Service::save_interfaces();
+        return "Created $created interfaces";
     }
     else{
         return Dumper($input);
     }
 }
 
-sub create{
+sub create_device{
     my $name=$input->{device_name};
     my $int_count=$input->{int_count};
-    #todo insert dev in DB and get id
-    my $device_id=1;
+    my $device_id=Service::save_device($name);
     my $result="<p>created device: $name</p>";
     $result.=qq(
         <h4>Create interfaces for $name</h4>
         <button onclick="selAll()">(de)Select all</button>
         <form method="post">
         <input type="hidden" name="devices" value="devices">
+        <input type="hidden" name="device_id" value="$device_id">
         <table>
         <tr>
         <th>sel</th>
@@ -46,7 +50,7 @@ sub create{
     for(my $i = 1; $i <= $int_count; $i++){
         $result.=qq(
             <tr>
-            <td><input type="checkbox" name="sel" /></td>
+            <td><input type="checkbox" name="sel" value="$i"/></td>
             <td><input type="hidden" name="int_number[$i]"/><span class="num_val"></span></td>
             <td><input type="text" name="int_name[$i]" /></td>
             </tr>
@@ -54,7 +58,7 @@ sub create{
     }
     $result.=qq(
         </table>
-        <input type="submit" name="create_int" />
+        <input type="submit" name="create_int_btn" />
         </form>
         <script>handleIntNum()</script>
         );
@@ -69,7 +73,7 @@ sub add_dev_form{
         <input type="text" name="device_name" id="device_name" required />
         <label for="int_count">Interfaces:</label>
         <input type="number" name="int_count" id="int_count" min="1" value="1" />
-        <input type="submit" name="create_device" value="create"/>
+        <input type="submit" name="create_dev_btn" value="create"/>
         </form>
     );
     return $txt;
