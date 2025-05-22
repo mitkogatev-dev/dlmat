@@ -32,7 +32,26 @@ sub init_db(){
     return $dbh;
 }
 
-sub save_interfaces{
+sub devices_get{
+    my $dbh=init_db();
+    my $q="SELECT device_id,device_name FROM devices WHERE 1;";
+    my $devices=$dbh->selectall_arrayref($q,{Slice=>{}});
+    $dbh->disconnect();
+    foreach my $device (@$devices){
+        $device->{interfaces}=&interfaces_get($device->{device_id});
+    }
+    return $devices;
+}
+sub interfaces_get{
+    my $device_id=shift;
+    my $dbh=init_db();
+    my $q="SELECT interface_id,device_id,interface_number,interface_name FROM interfaces WHERE device_id=?";
+    my $interfaces=$dbh->selectall_arrayref($q,{Slice=>{}},$device_id);
+    $dbh->disconnect();
+    return $interfaces;
+}
+
+sub interfaces_save{
 
     my @selected=$cgi->param('sel');
     my $device_id=$input->{device_id};
@@ -46,7 +65,7 @@ sub save_interfaces{
     }
     return $counter;
 }
-sub save_device{
+sub device_save{
     my $dbh=init_db();
     my $device_name=shift;
     my $sth=$dbh->prepare("INSERT INTO devices(device_name) VALUES(?);");

@@ -14,25 +14,39 @@ my $cfg=Cfg::get_config();
 my $debug=Cfg::get_debug();
 
 sub handle{
-    if($input->{add_dev}){
+    if($input->{add_dev_btn}){
         return &add_dev_form();
     }
     elsif($input->{create_dev_btn}){
         return &create_device();
     }
     elsif($input->{create_int_btn}){
-        my $created=Service::save_interfaces();
+        my $created=Service::interfaces_save();
         return "Created $created interfaces";
+    }
+    elsif($input->{show_devices_btn}){
+        return &list_dev();
     }
     else{
         return Dumper($input);
     }
 }
 
+sub list_dev{
+    my $devices=Service::devices_get();
+    my $html="<h4>Devices</h4>";
+    foreach my $device (@$devices){
+        my $int_count=scalar(@{$device->{interfaces}});
+        $html.="<p>$device->{device_name} interfaces:$int_count </p>";
+    }
+    return $html;
+
+}
+
 sub create_device{
     my $name=$input->{device_name};
     my $int_count=$input->{int_count};
-    my $device_id=Service::save_device($name);
+    my $device_id=Service::device_save($name);
     my $result="<p>created device: $name</p>";
     $result.=qq(
         <h4>Create interfaces for $name</h4>
