@@ -1,0 +1,28 @@
+.devices{
+    display: -ms-flexbox; /* IE10 */
+    display: flex;
+    -ms-flex-wrap: wrap; /* IE10 */
+    flex-wrap: wrap;
+}
+.device{
+    display: inline-block;
+    /*############*/
+    border-radius: 10px;
+    border: 2px solid #73AD21;
+    padding: 10px;
+    width: 30%; /*3 cols*/
+    margin: 10px;
+    /*##########*/
+}
+.interfaces{
+    display: inline-block;
+}
+.interface{
+    display: inline-block;
+    border: 1px solid;
+    width: 30px;
+    margin-left: -2px;
+    margin-top: 1px;
+    /*flex:8% 0;*/
+    text-align: center;
+}

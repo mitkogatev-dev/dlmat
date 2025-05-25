@@ -31,8 +31,27 @@ sub handle{
         return Dumper($input);
     }
 }
-
 sub list_dev{
+    my $devices=Service::devices_get();
+    my $html="<h4>Devices</h4>";
+    my $html="<div class='devices'>";
+    foreach my $device (@$devices){
+        $html.=qq(
+            <div id="$device->{device_id}" class="device">
+            <div class="dev_title">$device->{device_name}</div>
+            <div class="interfaces">
+            );
+            foreach my $interface (@{$device->{interfaces}}){
+                $html.=qq(
+                    <div class="interface">$interface->{interface_number}</div>
+                );
+            }
+            $html.="</div></div>";
+    }
+    $html.="</div>";
+    return $html;
+}
+sub list_dev_old{
     my $devices=Service::devices_get();
     my $html="<h4>Devices</h4>";
     foreach my $device (@$devices){
