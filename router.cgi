@@ -28,6 +28,7 @@ require "$dir/config.pl";
 require "$dir/service.pl";
 require "$dir/strings.pl";
 require "$dir/device.pl";
+require "$dir/svg.pl";
 #
 my $cfg=Cfg::get_config();
 my $debug=Cfg::get_debug();
@@ -36,6 +37,9 @@ if($request_method eq "POST"){
     if($input{devices}){
         # $html=Strings::add_dev_form();
         $html=Device::handle();
+    }
+    elsif($input{linker_btn}){
+        $html=Svg::init();
     }
     else{
         $html="POST";
@@ -61,6 +65,8 @@ print qq(
     <link rel="stylesheet" href="css/style.css">
     <link rel="stylesheet" href="css/devices.css">
     <script src='js/script.js'></script>
+    <script src='js/svg.min.js'></script>
+    <script src='js/handler.js'></script>
     <title>Frame</title>
 </head>
 );
