@@ -27,6 +27,21 @@ zoom: {
 
     }
 },
+perlPost:function(args){
+    let json=JSON.stringify(args);
+    fetch("router.cgi", {
+     method: "POST",
+     body: `js_vals=${json};from_js=true;`,
+     headers: {
+     "Content-type": "application/x-www-form-urlencoded; charset=UTF-8"
+     }
+    })
+    .then((response)=>{
+      if(200==response.status){
+        console.log("post OK");
+      }
+    })
+},
 svg:{
     currPoints:[],
     polylines:[],
@@ -53,6 +68,7 @@ svg:{
          * then? refresh or reset arrays?
          */
         alert("TODO");
+        handler.perlPost(handler.svg.i2i);
     },
     drawLine:function(e){
         let currPoints=handler.svg.currPoints;

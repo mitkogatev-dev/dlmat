@@ -41,6 +41,10 @@ if($request_method eq "POST"){
     elsif($input{linker_btn}){
         $html=Svg::init();
     }
+    elsif($input{from_js}){
+        my $decoded=from_json($input{js_vals});
+        print $debug Dumper($decoded);
+    }
     else{
         $html="POST";
     }
