@@ -28,9 +28,10 @@ zoom: {
     }
 },
 svg:{
-    arr:[],
-    polys:[],
-    polyline:[],
+    currPoints:[],
+    polylines:[],
+    i2i:[],
+    currIds:[],
     getRandomColor:function(){
         let letters = '0123456789ABCDEF';
         let color = '#';
@@ -39,38 +40,46 @@ svg:{
         }
         return color;
     },
-    test:function(e){
-        let arr=handler.svg.arr;
-        let polys=handler.svg.polys;
-        let polyline=handler.svg.polyline;
+    undo:function(){
+        if (handler.svg.polylines.length ===0){return;}
+        let lastElem=handler.svg.polylines.pop();
+        lastElem.remove();
+        console.log("undo done");
+    },
+    save:function(){
+        //TODO
+        /**
+         * since it js, best way to save ids is via perlPost
+         * then? refresh or reset arrays?
+         */
+        alert("TODO");
+    },
+    drawLine:function(e){
+        let currPoints=handler.svg.currPoints;
+        let polylines=handler.svg.polylines;
+        let currIds=handler.svg.currIds;
         let x = 0;
         let y = 0;
-        let c=0;
 
         x = e.offsetLeft + e.offsetWidth / 2 +10;
         y = e.offsetTop + e.offsetHeight / 2;
 
         console.log("x=" + x + ",y=" + y);
+        currIds.push(e.id);
     
     
-        arr.push([x, y]);
-        if (arr.length > 1){
+        currPoints.push([x, y]);
+        if (currPoints.length > 1){
             var draw = SVG('svg-container');
-            c++;
             console.log("start for");
-            var array = new SVG.PointArray(arr);
-            polyline[c] = draw.polyline(array).fill('none').stroke({ width: 4, color: handler.svg.getRandomColor() });
-            //////store(polyline[c],"id=" +ids);
-            console.log("end" +polyline[c]);
-            handler.svg.arr=[];
-            ids=[];
+            var array = new SVG.PointArray(currPoints);
+            polylines.push(draw.polyline(array).fill('none').stroke({ width: 4, color: handler.svg.getRandomColor() }));
+            handler.svg.i2i.push(currIds);
+            handler.svg.currIds=[];
+            handler.svg.currPoints=[];
         }//end ifconet
         /////////////////////
-        var le=polys.length;
-        console.log("total lines:"+le);
-        for (var i=0;i<polys.length;i++){
-            console.log("test:"+polys[i].test+"name:"+polys[i]);
-        }
+       
     },
 },
 

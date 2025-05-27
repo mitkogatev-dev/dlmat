@@ -8,7 +8,11 @@ my $dir=$RealBin;
 
 sub init{
     my $html=qq(
-        <div>zoom <span onclick="handler.zoom.in()"><button>+</button></span> or <span onclick="handler.zoom.out()"><button>-</button></span></div>
+        <div>
+        zoom <span onclick="handler.zoom.in()"><button>+</button></span> or <span onclick="handler.zoom.out()"><button>-</button></span>
+        <button onclick="handler.svg.undo()">undo</button>
+        <button onclick="handler.svg.save()">save</button>
+        </div>
 
         <svg id="svg-container" width="100%" height="800px" style='transform: scale(1);transform-origin:top left;'>
             <foreignobject id="fobj" x="10" y="0" height="100%" width="100%" >
@@ -23,7 +27,7 @@ sub init{
         );
             foreach my $interface (@{$device->{interfaces}}){
                 $html.=qq(
-                    <div onclick="handler.svg.test(this)" id="i$interface->{interface_id}" class="interface" title="$interface->{interface_name}">$interface->{interface_number}</div>
+                    <div onclick="handler.svg.drawLine(this)" id="i$interface->{interface_id}" class="interface" title="$interface->{interface_name}">$interface->{interface_number}</div>
                 );
             }
         $html.="</div></div>";
