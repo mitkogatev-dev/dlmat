@@ -31,7 +31,17 @@ sub init_db(){
     }
     return $dbh;
 }
+sub device_save{
+    my $dbh=init_db();
+    my $device_name=shift;
+    my $sth=$dbh->prepare("INSERT INTO devices(device_name) VALUES(?);");
+    $sth->execute($device_name);
+    my $device_id=$sth->{mysql_insertid};
+    $dbh->disconnect();
 
+    return $device_id;
+
+}
 sub devices_get{
     my $dbh=init_db();
     my $q="SELECT device_id,device_name FROM devices WHERE 1;";
@@ -65,16 +75,19 @@ sub interfaces_save{
     }
     return $counter;
 }
-sub device_save{
+sub i2i_save{
+    my $ids=shift;
+    return if scalar @{$ids}<1;
     my $dbh=init_db();
-    my $device_name=shift;
-    my $sth=$dbh->prepare("INSERT INTO devices(device_name) VALUES(?);");
-    $sth->execute($device_name);
-    my $device_id=$sth->{mysql_insertid};
-    $dbh->disconnect();
+    my $sth=$dbh->prepare("INSERT INTO i2i(int_a,int_b) VALUES (?,?)");
 
-    return $device_id;
-
+    for (my $i=0;$i<@{$ids};$i++) 
+    {
+        my $pair=@$ids[$i];
+        my $int_a=substr(@$pair[0],1);
+        my $int_b=substr(@$pair[1],1);
+        $sth->execute($int_a,$int_b);
+    }
+    $dbh->disconnect;
 }
-
 return 1;

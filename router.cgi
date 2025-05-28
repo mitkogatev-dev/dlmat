@@ -43,7 +43,7 @@ if($request_method eq "POST"){
     }
     elsif($input{from_js}){
         my $decoded=from_json($input{js_vals});
-        print $debug Dumper($decoded);
+        Service::i2i_save($decoded);
     }
     else{
         $html="POST";
