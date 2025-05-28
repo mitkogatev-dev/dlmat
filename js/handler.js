@@ -39,6 +39,7 @@ perlPost:function(args){
     .then((response)=>{
       if(200==response.status){
         console.log("post OK");
+        handler.svg.empty();
       }
     })
 },
@@ -47,6 +48,20 @@ svg:{
     polylines:[],
     i2i:[],
     currIds:[],
+    empty:function(){
+        handler.svg.currPoints=[];
+        handler.svg.polylines=[];
+        handler.svg.i2i=[];
+        handler.svg.currIds=[];
+    },
+    redraw:function(json){
+        json.forEach(pair => {
+            // console.log("a="+pair.int_a +" | b="+pair.int_b);
+            document.getElementById("i"+pair.int_a).click();
+            document.getElementById("i"+pair.int_b).click();
+        });
+        handler.svg.empty();
+    },
     getRandomColor:function(){
         let letters = '0123456789ABCDEF';
         let color = '#';
@@ -62,12 +77,7 @@ svg:{
         console.log("undo done");
     },
     save:function(){
-        //TODO
-        /**
-         * since it js, best way to save ids is via perlPost
-         * then? refresh or reset arrays?
-         */
-        alert("TODO");
+        if(handler.svg.i2i.length === 0){return;}
         handler.perlPost(handler.svg.i2i);
     },
     drawLine:function(e){
@@ -80,14 +90,13 @@ svg:{
         x = e.offsetLeft + e.offsetWidth / 2 +10;
         y = e.offsetTop + e.offsetHeight / 2;
 
-        console.log("x=" + x + ",y=" + y);
+        // console.log("x=" + x + ",y=" + y);
         currIds.push(e.id);
     
     
         currPoints.push([x, y]);
         if (currPoints.length > 1){
             var draw = SVG('svg-container');
-            console.log("start for");
             var array = new SVG.PointArray(currPoints);
             polylines.push(draw.polyline(array).fill('none').stroke({ width: 4, color: handler.svg.getRandomColor() }));
             handler.svg.i2i.push(currIds);

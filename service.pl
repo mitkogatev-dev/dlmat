@@ -90,4 +90,11 @@ sub i2i_save{
     }
     $dbh->disconnect;
 }
+sub i2i_get{
+    my $dbh=init_db();
+    my $q="SELECT int_a,int_b FROM i2i WHERE 1;";
+    my $links=$dbh->selectall_arrayref($q,{Slice=>{}});
+    $dbh->disconnect();
+    return $links;
+}
 return 1;

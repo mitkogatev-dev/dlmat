@@ -5,6 +5,8 @@ package Svg;
 use strict;
 use FindBin 1.51 qw( $RealBin );
 my $dir=$RealBin;
+use JSON;
+
 
 sub init{
     my $html=qq(
@@ -37,6 +39,12 @@ sub init{
             </foreignobject>
         </svg>
     );
+    my $links=to_json(Service::i2i_get());
+    # foreach my $pair(@{$links}){
+    #     $html.="<p>a=$pair->{int_a} | b=$pair->{int_b}</p>";
+    # }
+    $html.="<script>handler.svg.redraw($links)</script>";
+    return $html;
     
 }
 
