@@ -21,6 +21,10 @@
             <form action="router.cgi" method="post" target="frame">
                 <input type="submit" value="links" name="linker_btn">
             </form>
+            <form action="router.cgi" method="post" target="frame">
+                <input type="hidden" name="tracer" value="tracer">
+                <input type="submit" value="trace" name="tracer_btn">
+            </form>
         </div>
 
         <iframe id="frame" name="frame" frameborder="0" scrolling="yes" class="main"  ></iframe>

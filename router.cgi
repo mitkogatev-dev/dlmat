@@ -29,6 +29,7 @@ require "$dir/service.pl";
 require "$dir/strings.pl";
 require "$dir/device.pl";
 require "$dir/svg.pl";
+require "$dir/tracer.pl";
 #
 my $cfg=Cfg::get_config();
 my $debug=Cfg::get_debug();
@@ -44,6 +45,9 @@ if($request_method eq "POST"){
     elsif($input{from_js}){
         my $decoded=from_json($input{js_vals});
         Service::i2i_save($decoded);
+    }
+    elsif($input{tracer}){
+        $html=Tracer::handle();
     }
     else{
         $html="POST";

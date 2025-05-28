@@ -6,6 +6,35 @@ use strict;
 use FindBin 1.51 qw( $RealBin );
 my $dir=$RealBin;
 
+sub trace_form{
+    my $devices=Service::devices_get();
+    my $options="";
+    foreach my $device(@{$devices}){
+        $options.=qq(
+            <option value="$device->{device_id}">$device->{device_name}</option>
+        );
+    }
+
+
+    my $txt="<h4>Trace connection between devices</h4>";
+    $txt.=qq(
+        <form method="post">
+        <input type="hidden" name="tracer" value="tracer">
+        <label for="from_dev">From: </label>
+        <select id="from_dev" name="from_dev">
+        $options
+        </select>
+        <label for="to_dev">To: </label>
+        <select id="to_dev" name="to_dev">
+        $options
+        </select>
+        <input type="submit" name="go_trace" value="trace" />
+        </form>
+        );
+    return $txt;
+}
+
+
 sub add_dev_form{
     my $txt=qq(<form action="" method="post">);
     $txt.=qq(
