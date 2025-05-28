@@ -89,6 +89,7 @@ svg:{
 
         x = e.offsetLeft + e.offsetWidth / 2 +10;
         y = e.offsetTop + e.offsetHeight / 2;
+        e.classList.add('selected');
 
         // console.log("x=" + x + ",y=" + y);
         currIds.push(e.id);
