@@ -29,31 +29,59 @@ sub trace_dev{
     my $from_dev=$input->{from_dev};
     my $to_dev=$input->{to_dev};
     my $html="trace from $from_dev to $to_dev";
+    # trace_alg("7","4","0");
+    my @path;
+    $html.=trace_alg($from_dev,$to_dev,"0",\@path);
     return $html;
 }
 sub trace_alg{
-    my $from_dev="4";
-    my $to_dev="7";
-    my $first_q=qq(
-        SELECT d.device_id,d.device_name,i.interface_id,i.interface_name,i2i.* FROM `devices` d 
-        JOIN interfaces i ON d.device_id=i.device_id
-        JOIN i2i ON (i2i.int_a=i.interface_id OR i2i.int_b=i.interface_id)
-        WHERE d.device_id=4;
-    );
-    #if first_q return more than 1 row device is connected to multiple devices, so need to track all
+    my $from_dev=shift;
+    my $to_dev=shift;
+    my $parent=shift;
+    my $path=shift;
+    return if grep { $from_dev == $_->{device_id} } @$path;
+    my $relations=get_device_relations($from_dev);
+    return if !$relations;
+    while(my $relation = shift(@{$relations})){
+        next if $parent eq $relation->{to_dev_id};
+        #next if grep { $id == $_->{device_id} } @$path;
+        push (@{$path},$relation);
+        if($relation->{to_dev_id} eq $to_dev){
+            print $debug "Found IT!!!\n";
+            print $debug Dumper($relation);
+            print $debug Dumper($path);
+            return 0;
+        }else{
+        trace_alg($relation->{to_dev_id},$to_dev,$relation->{device_id},$path);
+        }
+    }
+    return show_path($path);
+}
+sub show_path{
+    my $path=shift;
+    my $txt="";
+    foreach my $row (@{$path}){
+        $txt.="<p>$row->{to_dev_name}($row->{to_int_name})</p>";
+    }
+    return $txt;
+}
 
-    #full join
-    my $fq=qq(
+sub get_device_relations{
+    my $device_id=shift;
+     #full join
+    my $q=qq(
         SELECT d.device_id,d.device_name,i.interface_id,i.interface_name,d2.device_id AS to_dev_id,d2.device_name AS to_dev_name,i2.interface_name AS to_int_name
         FROM `devices` d 
         JOIN interfaces i ON d.device_id=i.device_id
         JOIN i2i ON (i2i.int_a=i.interface_id OR i2i.int_b=i.interface_id)
         JOIN devices d2 ON d2.device_id=(SELECT device_id FROM interfaces WHERE (interface_id in(i2i.int_a,i2i.int_b) AND device_id != d.device_id ) LIMIT 1)
         JOIN interfaces i2 ON ((i2i.int_a=i2.interface_id OR i2i.int_b=i2.interface_id) AND i2.interface_id != i.interface_id)
-        WHERE d.device_id=4;
+        WHERE d.device_id=?;
     );
-    #if full join to_dev==$to_dev We found it! else continue loop
-
+    my $dbh=Service::init_db();
+    my $result=$dbh->selectall_arrayref($q,{Slice=>{}},$device_id); 
+    $dbh->disconnect;
+    return $result;
 }
 
 
