@@ -48,11 +48,22 @@ svg:{
     polylines:[],
     i2i:[],
     currIds:[],
+    enabled:1,
+    enable:function(el){
+        if(handler.svg.enabled){
+            handler.svg.enabled=0;
+            el.innerHTML="enable linking";
+        }else{
+            handler.svg.enabled=1;
+            el.innerHTML="disable linking";
+        }
+    },
     empty:function(){
         handler.svg.currPoints=[];
         handler.svg.polylines=[];
         handler.svg.i2i=[];
         handler.svg.currIds=[];
+        handler.svg.enabled=0;
     },
     redraw:function(json){
         json.forEach(pair => {
@@ -81,6 +92,7 @@ svg:{
         handler.perlPost(handler.svg.i2i);
     },
     drawLine:function(e){
+        if (!handler.svg.enabled) return; 
         let currPoints=handler.svg.currPoints;
         let polylines=handler.svg.polylines;
         let currIds=handler.svg.currIds;

@@ -12,6 +12,7 @@ sub init{
     my $html=qq(
         <div>
         zoom <span onclick="handler.zoom.in()"><button>+</button></span> or <span onclick="handler.zoom.out()"><button>-</button></span>
+        <button onclick="handler.svg.enable(this)">enable linking</button>
         <button onclick="handler.svg.undo()">undo</button>
         <button onclick="handler.svg.save()">save</button>
         </div>
