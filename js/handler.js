@@ -27,6 +27,26 @@ zoom: {
 
     }
 },
+hoverEffect:function(elem){
+    elem.addEventListener(
+        "mouseenter",
+        (event) => {
+          event.target.style.background = "purple";
+          let pairedElem=document.getElementById(event.target.getAttribute("pair"));
+          pairedElem.style.background = "purple";
+        },
+        false,
+      );
+      elem.addEventListener(
+        "mouseleave",
+        (event) => {
+          event.target.style.background = "";
+          let pairedElem=document.getElementById(event.target.getAttribute("pair"));
+          pairedElem.style.background = "";
+        },
+        false,
+      );
+},
 perlPost:function(args){
     let json=JSON.stringify(args);
     fetch("router.cgi", {
@@ -67,9 +87,14 @@ svg:{
     },
     redraw:function(json){
         json.forEach(pair => {
-            // console.log("a="+pair.int_a +" | b="+pair.int_b);
-            document.getElementById("i"+pair.int_a).click();
-            document.getElementById("i"+pair.int_b).click();
+            let elemA=document.getElementById("i"+pair.int_a);
+            let elemB=document.getElementById("i"+pair.int_b);
+            elemA.setAttribute("pair","i"+pair.int_b);
+            elemB.setAttribute("pair","i"+pair.int_a);
+            elemA.click();
+            elemB.click();
+            handler.hoverEffect(elemA);
+            handler.hoverEffect(elemB);
         });
         handler.svg.empty();
     },
