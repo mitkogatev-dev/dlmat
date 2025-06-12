@@ -27,7 +27,26 @@ zoom: {
 
     }
 },
-hoverEffect:function(elem){
+hoverEffect:{
+    add:function(elem){
+        elem.addEventListener("mouseenter",this.event);
+        elem.addEventListener("mouseleave",this.event);
+    },
+    remove:function(elem){
+        elem.removeEventListener("mouseenter",this.event);
+        elem.removeEventListener("mouseleave",this.event);
+        elem.style.background = "";
+    },
+    event:(e)=>{
+        let color="";
+        const elem=e.target;
+        if ("mouseenter" === e.type) color="purple";
+        elem.style.background = color;
+          const pairedElem=document.getElementById(elem.getAttribute("pair"));
+          pairedElem.style.background = color;
+    },
+},
+hoverEffectOL:function(elem){
     elem.addEventListener(
         "mouseenter",
         (event) => {
@@ -63,19 +82,57 @@ perlPost:function(args){
       }
     })
 },
+addClickListener:function(handlerName){
+    const elements=document.querySelectorAll("div.interface");
+    let func;
+    if("draw" === handlerName){
+        func=handler.svg.drawLine;
+    }
+    else if ("unlink" === handlerName){
+        func=handler.svg.unlink;
+    }
+    for (let i = 0; i < elements.length; i++) {
+        elements[i].addEventListener("click",func);
+    }
+},
+removeClickListener:function(){
+    const elements=document.querySelectorAll("div.interface");
+    for (let i = 0; i < elements.length; i++) {
+        elements[i].removeEventListener("click",handler.svg.drawLine);
+        elements[i].removeEventListener("click",handler.svg.unlink);
+    }
+},
 svg:{
     currPoints:[],
     polylines:[],
     i2i:[],
     currIds:[],
-    enabled:1,
-    enable:function(el){
-        if(handler.svg.enabled){
-            handler.svg.enabled=0;
-            el.innerHTML="enable linking";
+    linkMode:1,
+    unlinkMode:0,
+    enableLinking:function(){
+        const btn=document.getElementById("svgEnBtn");
+        if(handler.svg.linkMode){
+            handler.removeClickListener();
+            handler.svg.linkMode=0;
+            btn.innerHTML="enable linking";
         }else{
-            handler.svg.enabled=1;
-            el.innerHTML="disable linking";
+            if (handler.svg.unlinkMode) handler.svg.enableUnLinking();
+            handler.addClickListener("draw");
+            handler.svg.linkMode=1;
+            btn.innerHTML="disable linking";
+        }
+    },
+    enableUnLinking:function(){
+        const btn=document.getElementById("unlinkEnBtn");
+        if(handler.svg.unlinkMode){
+            handler.removeClickListener();
+            handler.svg.unlinkMode=0;
+            btn.innerHTML="enable unlinking";
+        }else{
+            if (handler.svg.linkMode) handler.svg.enableLinking();
+            handler.addClickListener("unlink");
+            handler.svg.unlinkMode=1;
+            btn.innerHTML="disable unlinking";
         }
     },
     empty:function(){
@@ -83,7 +140,8 @@ svg:{
         handler.svg.polylines=[];
         handler.svg.i2i=[];
         handler.svg.currIds=[];
-        handler.svg.enabled=0;
+        handler.svg.linkMode=0;
+        handler.removeClickListener();
     },
     redraw:function(json){
         json.forEach(pair => {
@@ -93,15 +151,15 @@ svg:{
             elemB.setAttribute("pair","i"+pair.int_a);
             elemA.click();
             elemB.click();
-            handler.hoverEffect(elemA);
-            handler.hoverEffect(elemB);
+            handler.hoverEffect.add(elemA);
+            handler.hoverEffect.add(elemB);
         });
         handler.svg.empty();
     },
     getRandomColor:function(){
         let letters = '0123456789ABCDEF';
         let color = '#';
-        for (var i = 0; i < 6; i++) {
+        for (let i = 0; i < 6; i++) {
             color += letters[Math.floor(Math.random() * 16)];
         }
         return color;
@@ -116,30 +174,57 @@ svg:{
         if(handler.svg.i2i.length === 0){return;}
         handler.perlPost(handler.svg.i2i);
     },
-    drawLine:function(e){
-        if (!handler.svg.enabled) return; 
+    unlink:function(event){
+        const elem=event.target;
+        let toElemId=elem.getAttribute("pair");
+        const toElem=document.getElementById(toElemId);
+        if (!elem || !toElem) return;
+        let line=document.getElementById(elem.getAttribute("line"));
+        let remPair=[];
+        remPair.push(toElemId.substring(1));
+        remPair.push(elem.id.substring(1));
+        line.remove();
+        _reset([elem,toElem]);
+        console.log(remPair);
+        function _reset(elements){
+            elements.forEach((el)=>{
+                handler.hoverEffect.remove(el);
+                el.classList.remove("selected");
+                el.removeAttribute("pair");
+                el.removeAttribute("line");
+            })
+        }
+    },
+    drawLine:function(event){
+        if (!handler.svg.linkMode) return; 
+        const elem=event.target;
         let currPoints=handler.svg.currPoints;
         let polylines=handler.svg.polylines;
         let currIds=handler.svg.currIds;
         let x = 0;
         let y = 0;
 
-        x = e.offsetLeft + e.offsetWidth / 2 +10;
-        y = e.offsetTop + e.offsetHeight / 2;
-        e.classList.add('selected');
+        x = elem.offsetLeft + elem.offsetWidth / 2 +10;
+        y = elem.offsetTop + elem.offsetHeight / 2;
+        elem.classList.add('selected');
 
         // console.log("x=" + x + ",y=" + y);
-        currIds.push(e.id);
+        currIds.push(elem.id);
     
     
         currPoints.push([x, y]);
         if (currPoints.length > 1){
-            var draw = SVG('svg-container');
-            var array = new SVG.PointArray(currPoints);
-            polylines.push(draw.polyline(array).fill('none').stroke({ width: 4, color: handler.svg.getRandomColor() }));
+            let draw = SVG('svg-container');
+            let array = new SVG.PointArray(currPoints);
+            let currLine=draw.polyline(array).fill('none').stroke({ width: 4, color: handler.svg.getRandomColor() });
+            polylines.push(currLine);
             handler.svg.i2i.push(currIds);
+            currIds.forEach(id => {
+                document.getElementById(id).setAttribute("line",currLine.id());
+            });
             handler.svg.currIds=[];
             handler.svg.currPoints=[];
+            // console.log(currLine.id());
         }//end ifconet
         /////////////////////
        

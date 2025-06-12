@@ -12,8 +12,9 @@ sub init{
     my $html=qq(
         <div>
         zoom <span onclick="handler.zoom.in()"><button>+</button></span> or <span onclick="handler.zoom.out()"><button>-</button></span>
-        <button onclick="handler.svg.enable(this)">enable linking</button>
-        <button onclick="handler.svg.undo()">undo</button>
+        <button id="svgEnBtn" onclick="handler.svg.enableLinking()">enable linking</button>
+        <button onclick="handler.svg.undo()">undo pair</button>
+        <button id="unlinkEnBtn" onclick="handler.svg.enableUnLinking()">enable unlinking</button>
         <button onclick="handler.svg.save()">save</button>
         </div>
 
@@ -30,7 +31,7 @@ sub init{
         );
             foreach my $interface (@{$device->{interfaces}}){
                 $html.=qq(
-                    <div onclick="handler.svg.drawLine(this)" id="i$interface->{interface_id}" class="interface" title="$interface->{interface_name}">$interface->{interface_number}</div>
+                    <div  id="i$interface->{interface_id}" class="interface" title="$interface->{interface_name}">$interface->{interface_number}</div>
                 );
             }
         $html.="</div></div>";
@@ -44,7 +45,12 @@ sub init{
     # foreach my $pair(@{$links}){
     #     $html.="<p>a=$pair->{int_a} | b=$pair->{int_b}</p>";
     # }
-    $html.="<script>handler.svg.redraw($links)</script>";
+    $html.=qq(
+            <script>
+            handler.addClickListener("draw");
+            handler.svg.redraw($links);
+            </script>
+            );
     return $html;
     
 }
