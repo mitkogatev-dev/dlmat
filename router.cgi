@@ -44,7 +44,13 @@ if($request_method eq "POST"){
     }
     elsif($input{from_js}){
         my $decoded=from_json($input{js_vals});
-        Service::i2i_save($decoded);
+        my $action=$input{action};
+        if("add" eq $action){
+            Service::i2i_save($decoded);
+        }
+        elsif("remove" eq $action){
+            Service::i2i_remove($decoded);
+        }else{return;}
     }
     elsif($input{tracer}){
         $html=Tracer::handle();

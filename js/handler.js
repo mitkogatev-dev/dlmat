@@ -66,11 +66,11 @@ hoverEffectOL:function(elem){
         false,
       );
 },
-perlPost:function(args){
+perlPost:function(args,action){
     let json=JSON.stringify(args);
     fetch("router.cgi", {
      method: "POST",
-     body: `js_vals=${json};from_js=true;`,
+     body: `js_vals=${json};from_js=true;action=${action};`,
      headers: {
      "Content-type": "application/x-www-form-urlencoded; charset=UTF-8"
      }
@@ -78,7 +78,12 @@ perlPost:function(args){
     .then((response)=>{
       if(200==response.status){
         console.log("post OK");
+        if("add" == action){
         handler.svg.empty();
+        }
+        if("remove" == action){
+            handler.svg.unlinkPairs=[];
+        }
       }
     })
 },
@@ -106,6 +111,7 @@ svg:{
     currPoints:[],
     polylines:[],
     i2i:[],
+    unlinkPairs:[],
     currIds:[],
     linkMode:1,
     unlinkMode:0,
@@ -171,8 +177,12 @@ svg:{
         console.log("undo done");
     },
     save:function(){
-        if(handler.svg.i2i.length === 0){return;}
-        handler.perlPost(handler.svg.i2i);
+        if(handler.svg.i2i.length > 0){
+        handler.perlPost(handler.svg.i2i,"add");
+        }
+        if(handler.svg.unlinkPairs.length >0){
+            handler.perlPost(handler.svg.unlinkPairs,"remove");
+        }
     },
     unlink:function(event){
         const elem=event.target;
@@ -185,7 +195,8 @@ svg:{
         remPair.push(elem.id.substring(1));
         line.remove();
         _reset([elem,toElem]);
-        console.log(remPair);
+        // console.log(remPair);
+        handler.svg.unlinkPairs.push(remPair);
         function _reset(elements){
             elements.forEach((el)=>{
                 handler.hoverEffect.remove(el);

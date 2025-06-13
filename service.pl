@@ -97,4 +97,19 @@ sub i2i_get{
     $dbh->disconnect();
     return $links;
 }
+sub i2i_remove{
+    my $ids=shift;
+    return if scalar @{$ids}<1;
+    my $dbh=init_db();
+    my $sth=$dbh->prepare("DELETE FROM `i2i` WHERE (int_a=? AND int_b=?) OR (int_a=? AND int_b=?); ");
+
+    for (my $i=0;$i<@{$ids};$i++) 
+    {
+        my $pair=@$ids[$i];
+        my $int_a=@$pair[0];
+        my $int_b=@$pair[1];
+        $sth->execute($int_a,$int_b,$int_b,$int_a);
+    }
+    $dbh->disconnect;
+}
 return 1;
