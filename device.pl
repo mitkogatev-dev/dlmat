@@ -38,7 +38,14 @@ sub list_dev{
     foreach my $device (@$devices){
         $html.=qq(
             <div id="$device->{device_id}" class="device">
-            <div class="dev_title">$device->{device_name}</div>
+            <div class="dev_title">
+                $device->{device_name}
+                <div class="inline_menu">
+                    <button>BTN A</button>
+                    <button>BTN B</button>
+                    <button>BTN C</button>
+                </div>
+            </div>
             <div class="interfaces">
             );
             foreach my $interface (@{$device->{interfaces}}){
@@ -49,6 +56,7 @@ sub list_dev{
             $html.="</div></div>";
     }
     $html.="</div>";
+    $html.=qq(<script>handler.menuListener()</script>);
     return $html;
 }
 sub list_dev_old{

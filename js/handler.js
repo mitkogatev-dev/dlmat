@@ -87,6 +87,16 @@ perlPost:function(args,action){
       }
     })
 },
+menuListener:function(){
+    const elements=document.querySelectorAll(".dev_title");
+    for (let i = 0; i < elements.length; i++) {
+        elements[i].addEventListener("click",handler.menuToggle);
+    }
+},
+menuToggle:function(event){
+    const elem=event.target;
+    elem.querySelector(".inline_menu").classList.toggle("show");
+},
 addClickListener:function(handlerName){
     const elements=document.querySelectorAll("div.interface");
     let func;
