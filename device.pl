@@ -27,9 +27,19 @@ sub handle{
     elsif($input->{show_devices_btn}){
         return &list_dev();
     }
+    elsif($input->{remove_device_btn}){
+        return &remove_device($input->{device_id});
+    }
     else{
         return Dumper($input);
     }
+}
+sub remove_device{
+    my $device_id=shift;
+    if (Service::device_remove($device_id)){
+        return "Device Removed";
+    }
+    return "Error";
 }
 sub list_dev{
     my $devices=Service::devices_get();
@@ -41,9 +51,13 @@ sub list_dev{
             <div class="dev_title">
                 $device->{device_name}
                 <div class="inline_menu">
-                    <button>BTN A</button>
+                <form action="" method="post">
+                <input type="hidden" name="devices" value="devices">
+                <input type="hidden" name="device_id" value="$device->{device_id}">
+                    <input type="submit" name="remove_device_btn" value="Delete"/>
                     <button>BTN B</button>
                     <button>BTN C</button>
+                </form>
                 </div>
             </div>
             <div class="interfaces">

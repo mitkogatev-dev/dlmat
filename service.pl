@@ -52,6 +52,15 @@ sub devices_get{
     }
     return $devices;
 }
+sub device_remove{
+    my $device_id=shift;
+    my $q="DELETE FROM devices WHERE device_id=?;";
+    my $dbh=init_db();
+    my $sth=$dbh->prepare($q);
+    if ($sth->execute($device_id)){
+        return 1;
+    }else{return 0;}
+}
 sub interfaces_get{
     my $device_id=shift;
     my $dbh=init_db();
