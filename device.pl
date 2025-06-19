@@ -162,11 +162,12 @@ sub edit_device{
         <th>type</th>
         </tr>
     );
-    my $int_type=Strings::interface_type_select();
+    my $int_type_tmp=Strings::interface_type_select();
     
     foreach my $interface (@{$device->{interfaces}})
     {
         my $int_id=$interface->{interface_id};
+        my $int_type=Strings::int_type_mod($int_type_tmp,$int_id,$interface->{interface_type});
         $html.=qq(
             <tr>
             <td><input type="checkbox" name="sel" value="$int_id"/></td>

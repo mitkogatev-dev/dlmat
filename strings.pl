@@ -43,7 +43,15 @@ sub interface_type_select{
     $int_type.="</select>";
     return $int_type;
 }
+sub int_type_mod{
+    my $str=shift;
+    my $idx=shift;
+    my $type_id=shift;
+    $str=~ s/interface_type/interface_type[$idx]/;
+    $str=~ s/\"$type_id\"/\"$type_id\" selected=\"selected\" /;
+    return $str;
 
+}
 sub add_dev_form{
     my $txt=qq(<form action="" method="post">);
     $txt.=qq(

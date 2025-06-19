@@ -74,7 +74,7 @@ sub device_remove{
 sub interfaces_get{
     my $device_id=shift;
     my $dbh=init_db();
-    my $q="SELECT interface_id,device_id,interface_number,interface_name FROM interfaces WHERE device_id=? ORDER BY interface_number";
+    my $q="SELECT interface_id,device_id,interface_number,interface_name,interface_type FROM interfaces WHERE device_id=? ORDER BY interface_number";
     my $interfaces=$dbh->selectall_arrayref($q,{Slice=>{}},$device_id);
     $dbh->disconnect();
     return $interfaces;
@@ -92,6 +92,21 @@ sub interfaces_save{
         $sth->execute($device_id,$input->{"int_number[$idx]"},$input->{"int_name[$idx]"});
         $counter++;
     }
+    return $counter;
+}
+sub interfaces_update{
+
+    my @selected=$cgi->param('sel');
+    my $device_id=$input->{device_id};
+    my $dbh=init_db();
+    my $sth=$dbh->prepare("UPDATE interfaces SET interface_number =?, interface_name=?, interface_type=? WHERE interface_id=?");
+    my $counter=0;
+
+    foreach my $idx (@selected) {
+        $sth->execute($input->{"int_number[$idx]"},$input->{"int_name[$idx]"},$input->{"interface_type[$idx]"},$idx);
+        $counter++;
+    }
+    $dbh->disconnect;
     return $counter;
 }
 sub interfaces_get_types{
