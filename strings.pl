@@ -33,7 +33,16 @@ sub trace_form{
         );
     return $txt;
 }
+sub interface_type_select{
+    my $int_type=qq(<select name="interface_type">);
+    my $types=Service::interfaces_get_types();
+    foreach my $type (@{$types}){
+        $int_type.=qq(<option vlaue="$type->{interface_type_id}">$type->{interface_type_name}</option>);
+    }
 
+    $int_type.="</select>";
+    return $int_type;
+}
 
 sub add_dev_form{
     my $txt=qq(<form action="" method="post">);
@@ -45,5 +54,6 @@ sub add_dev_form{
     );
     return $txt;
 }
+
 
 return 1;

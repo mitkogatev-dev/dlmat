@@ -26,6 +26,71 @@
     /*flex:8% 0;*/
     text-align: center;
 }
+.int_virt {
+    --t:1px;  /* Thickness */
+    --c:black; /* Color */
+  
+    width: 30px;
+    /* height:100px; */
+    display:inline-block;
+    
+    background:
+      /* Left side */
+      linear-gradient(to bottom left,
+        transparent 49.5%,var(--c) 50% calc(50% + var(--t)),
+        transparent calc(50% + var(--t) + 1px)) right/30% 100%,
+      /* right side */
+      linear-gradient(to bottom right,
+        transparent 49.5%,var(--c) 50% calc(50% + var(--t)),
+        transparent calc(50% + var(--t) + 1px)) left/30% 100%,
+      /* bottom side*/
+      linear-gradient(var(--c),var(--c)) bottom/calc(100% - 2*var(--t)) var(--t);
+    background-repeat:no-repeat;
+    margin-left: -2px;
+    margin-top: 1px;
+    text-align: center;
+    border-top:1px solid;
+    
+  }
+.int_wlan{
+    display: inline-block;
+    border: 1px solid;
+    /* border-radius: 40%; */
+    border-top-right-radius: 50%;
+    border-top-left-radius: 50%;
+    border-bottom-right-radius: 50%;
+    border-bottom-left-radius: 50%;
+    width: 30px;
+    margin-left: -2px;
+    margin-top: 1px;
+    /*flex:8% 0;*/
+    text-align: center;
+}
+.triangle {
+    --t:1px;  /* Thickness */
+    --c:black; /* Color */
+  
+    width: 30px;
+    /* height:100px; */
+    display:inline-block;
+    
+    background:
+      /* Left side */
+      linear-gradient(to bottom left,
+        transparent 49.5%,var(--c) 50% calc(50% + var(--t)),
+        transparent calc(50% + var(--t) + 1px)) right/50% 100%,
+      /* right side */
+      linear-gradient(to bottom right,
+        transparent 49.5%,var(--c) 50% calc(50% + var(--t)),
+        transparent calc(50% + var(--t) + 1px)) left/50% 100%,
+      /* bottom side*/
+      linear-gradient(var(--c),var(--c)) bottom/calc(100% - 2*var(--t)) var(--t);
+    background-repeat:no-repeat;
+    margin-left: -2px;
+    margin-top: 1px;
+    text-align: center;
+  }
+  
 .selected{
     border:2px solid;
 }

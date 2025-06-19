@@ -10,6 +10,7 @@ use JSON;
 
 sub init{
     my $html=qq(
+        <p style="color:red;">When int type is ready i2i only for the same type!! eg:wlan to wlan</p>
         <div>
         zoom <span onclick="handler.zoom.in()"><button>+</button></span> or <span onclick="handler.zoom.out()"><button>-</button></span>
         <button id="svgEnBtn" onclick="handler.svg.enableLinking()">enable linking</button>

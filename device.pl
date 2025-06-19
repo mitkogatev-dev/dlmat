@@ -30,6 +30,9 @@ sub handle{
     elsif($input->{remove_device_btn}){
         return &remove_device($input->{device_id});
     }
+    elsif($input->{edit_device_btn}){
+        return &edit_device($input->{device_id});
+    }
     else{
         return Dumper($input);
     }
@@ -55,6 +58,7 @@ sub list_dev{
                 <input type="hidden" name="devices" value="devices">
                 <input type="hidden" name="device_id" value="$device->{device_id}">
                     <input type="submit" name="remove_device_btn" value="Delete"/>
+                    <input type="submit" name="edit_device_btn" value="Edit"/>
                     <button>BTN B</button>
                     <button>BTN C</button>
                 </form>
@@ -119,6 +123,12 @@ sub create_device{
         );
     return $result;
 }
+sub edit_interfaces_form{
+    my $device=shift;
+    # my $htm
+    return 1;
+    
+}
 sub add_dev_form{
     my $txt="<h4>Create new device</h4>";
     $txt.=qq(<form action="" method="post">);
@@ -132,6 +142,50 @@ sub add_dev_form{
         </form>
     );
     return $txt;
+}
+sub edit_device{
+    my $device_id=shift;
+    my $devices=Service::devices_get($device_id);
+    my $device=$devices->[0];
+    my $html="<h4>Edit device: $device->{device_name}</h4>";
+    $html.=qq(
+        <form method="post">
+        <input type="hidden" name="devices" value="devices">
+        <input type="hidden" name="device_id" value="$device_id">
+        <label for="new_device_name">Change device name: </label>
+        <input type="text" id="new_device_name" name="new_device_name" placeholder="New name" value="" />
+        <table>
+        <tr>
+        <th>sel</th>
+        <th>int num</th>
+        <th>name</th>
+        <th>type</th>
+        </tr>
+    );
+    my $int_type=Strings::interface_type_select();
+    
+    foreach my $interface (@{$device->{interfaces}})
+    {
+        my $int_id=$interface->{interface_id};
+        $html.=qq(
+            <tr>
+            <td><input type="checkbox" name="sel" value="$int_id"/></td>
+            <td><input type="number" name="int_number[$int_id]" value="$interface->{interface_number}" style="width:60px;"/></td>
+            <td><input type="text" name="int_name[$int_id]" value="$interface->{interface_name}" /></td>
+            <td>$int_type</td>
+            </tr>
+        );
+    }
+    $html.="</table></form>";
+    $html.=qq(
+        <p>TODO:</p>
+        <p>ADD ability to create new interfaces;</p>
+        <p>add interface type;</p>
+        <p>if type is virtual add adbility to select physycal members;</p>
+        <p>int num, int name, int type CAN be changed</p>
+        );
+    return $html;
+
 }
 
 return 1;

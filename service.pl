@@ -43,9 +43,19 @@ sub device_save{
 
 }
 sub devices_get{
+    my $device_id=shift;
+    my $where=" 1";
+    if ($device_id){
+        $where=" device_id=?";
+    }
     my $dbh=init_db();
-    my $q="SELECT device_id,device_name FROM devices WHERE 1;";
-    my $devices=$dbh->selectall_arrayref($q,{Slice=>{}});
+    my $q="SELECT device_id,device_name FROM devices WHERE $where;";
+    my $devices;
+    if($device_id){
+    $devices=$dbh->selectall_arrayref($q,{Slice=>{}},$device_id);
+    }else{
+    $devices=$dbh->selectall_arrayref($q,{Slice=>{}});
+    }
     $dbh->disconnect();
     foreach my $device (@$devices){
         $device->{interfaces}=&interfaces_get($device->{device_id});
@@ -64,7 +74,7 @@ sub device_remove{
 sub interfaces_get{
     my $device_id=shift;
     my $dbh=init_db();
-    my $q="SELECT interface_id,device_id,interface_number,interface_name FROM interfaces WHERE device_id=?";
+    my $q="SELECT interface_id,device_id,interface_number,interface_name FROM interfaces WHERE device_id=? ORDER BY interface_number";
     my $interfaces=$dbh->selectall_arrayref($q,{Slice=>{}},$device_id);
     $dbh->disconnect();
     return $interfaces;
@@ -83,6 +93,13 @@ sub interfaces_save{
         $counter++;
     }
     return $counter;
+}
+sub interfaces_get_types{
+    my $q="SELECT interface_type_id,interface_type_name FROM interface_types WHERE 1";
+    my $dbh=init_db();
+    my $types=$dbh->selectall_arrayref($q,{Slice=>{}});
+    $dbh->disconnect();
+    return $types;
 }
 sub i2i_save{
     my $ids=shift;
