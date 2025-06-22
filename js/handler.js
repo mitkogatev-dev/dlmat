@@ -98,7 +98,7 @@ menuToggle:function(event){
     elem.querySelector(".inline_menu").classList.toggle("show");
 },
 addClickListener:function(handlerName){
-    const elements=document.querySelectorAll("div.interface");
+    const elements=document.querySelectorAll("div.interfaces >*");
     let func;
     if("draw" === handlerName){
         func=handler.svg.drawLine;
@@ -111,7 +111,8 @@ addClickListener:function(handlerName){
     }
 },
 removeClickListener:function(){
-    const elements=document.querySelectorAll("div.interface");
+    // const elements=document.querySelectorAll("div.interface");
+    const elements=document.querySelectorAll("div.interfaces >*");
     for (let i = 0; i < elements.length; i++) {
         elements[i].removeEventListener("click",handler.svg.drawLine);
         elements[i].removeEventListener("click",handler.svg.unlink);
