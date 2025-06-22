@@ -34,10 +34,10 @@ sub trace_form{
     return $txt;
 }
 sub interface_type_select{
-    my $int_type=qq(<select name="interface_type">);
+    my $int_type=qq(<select name="interface_type" id="interface_type">);
     my $types=Service::interfaces_get_types();
     foreach my $type (@{$types}){
-        $int_type.=qq(<option vlaue="$type->{interface_type_id}">$type->{interface_type_name}</option>);
+        $int_type.=qq(<option value="$type->{interface_type_id}">$type->{interface_type_name}</option>);
     }
 
     $int_type.="</select>";
@@ -48,7 +48,8 @@ sub int_type_mod{
     my $idx=shift;
     my $type_id=shift;
     $str=~ s/interface_type/interface_type[$idx]/;
-    $str=~ s/\"$type_id\"/\"$type_id\" selected=\"selected\" /;
+    # $str=~ s/\"$type_id\"/\"$type_id\" selected=\"selected\" /;
+    $str=~ s/\"$type_id\"/\"$type_id\" selected /;
     return $str;
 
 }

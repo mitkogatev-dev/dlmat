@@ -10,6 +10,7 @@ use Data::Dumper qw( Dumper );
 my $dir=$RealBin;
 
 my ($input)=\%main::input;
+my ($cgi)=$main::cgi;
 my $cfg=Cfg::get_config();
 my $debug=Cfg::get_debug();
 
@@ -33,6 +34,9 @@ sub handle{
     elsif($input->{edit_device_btn}){
         return &edit_device($input->{device_id});
     }
+    elsif($input->{update_device_btn}){
+        return &update_device();
+    }
     else{
         return Dumper($input);
     }
@@ -43,6 +47,19 @@ sub remove_device{
         return "Device Removed";
     }
     return "Error";
+}
+sub update_device{
+    my $device_id=$input->{device_id};
+    my $result="";
+    if($input->{new_device_name}){
+        Service::device_update($device_id,$input->{new_device_name});
+        $result.="<p>Name updated</p>";
+    }
+    my @selected=$cgi->param('sel');
+    if(scalar @selected >0){
+        $result.="updated: ". Service::interfaces_update() ."interfaces";
+    }
+    return $result;
 }
 sub list_dev{
     my $devices=Service::devices_get();
@@ -177,7 +194,11 @@ sub edit_device{
             </tr>
         );
     }
-    $html.="</table></form>";
+    $html.=qq(
+        </table>
+        <input type="submit" name="update_device_btn" value="Update" />
+        </form>
+        );
     $html.=qq(
         <p>TODO:</p>
         <p>ADD ability to create new interfaces;</p>

@@ -71,6 +71,16 @@ sub device_remove{
         return 1;
     }else{return 0;}
 }
+sub device_update{
+    my $device_id=shift;
+    my $new_name=shift;
+    my $dbh=init_db();
+    my $q="UPDATE devices SET device_name=? WHERE device_id=?";
+    my $sth=$dbh->prepare($q);
+    $sth->execute($new_name,$device_id);
+    $dbh->disconnect;
+    return 1;
+}
 sub interfaces_get{
     my $device_id=shift;
     my $dbh=init_db();
