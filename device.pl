@@ -84,8 +84,9 @@ sub list_dev{
             <div class="interfaces">
             );
             foreach my $interface (@{$device->{interfaces}}){
+                my $class=Strings::int_type_class($interface->{interface_type});
                 $html.=qq(
-                    <div class="interface">$interface->{interface_number}</div>
+                    <div class="$class">$interface->{interface_number}</div>
                 );
             }
             $html.="</div></div>";

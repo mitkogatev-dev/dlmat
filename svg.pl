@@ -31,8 +31,9 @@ sub init{
             <div class="interfaces">
         );
             foreach my $interface (@{$device->{interfaces}}){
+                my $class=Strings::int_type_class($interface->{interface_type});
                 $html.=qq(
-                    <div  id="i$interface->{interface_id}" class="interface" title="$interface->{interface_name}">$interface->{interface_number}</div>
+                    <div  id="i$interface->{interface_id}" class="$class" title="$interface->{interface_name}">$interface->{interface_number}</div>
                 );
             }
         $html.="</div></div>";

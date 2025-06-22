@@ -63,6 +63,17 @@ sub add_dev_form{
     );
     return $txt;
 }
+sub int_type_class{
+    my $int_type=shift;
+    my $class="interface";
+    if($int_type == 2){
+        $class="int_wlan";
+    }
+    elsif($int_type == 3){
+        $class="int_virt";
+    }
+    return $class;
+}
 
 
 return 1;
