@@ -36,15 +36,41 @@
     
     background:
       /* Left side */
-      linear-gradient(to bottom left,
+      linear-gradient(to top left,
         transparent 49.5%,var(--c) 50% calc(50% + var(--t)),
         transparent calc(50% + var(--t) + 1px)) right/30% 100%,
       /* right side */
-      linear-gradient(to bottom right,
+      linear-gradient(to top right,
         transparent 49.5%,var(--c) 50% calc(50% + var(--t)),
         transparent calc(50% + var(--t) + 1px)) left/30% 100%,
       /* bottom side*/
-      linear-gradient(var(--c),var(--c)) bottom/calc(100% - 2*var(--t)) var(--t);
+      linear-gradient(var(--c),var(--c)) bottom/calc(44% - 2*var(--t)) var(--t);
+    background-repeat:no-repeat;
+    margin-left: -2px;
+    margin-top: 1px;
+    text-align: center;
+    border-top:1px solid;
+    
+  }
+  .int_virt_bak {
+    --t:1px;  /* Thickness */
+    --c:black; /* Color */
+  
+    width: 30px;
+    /* height:100px; */
+    display:inline-block;
+    
+    background:
+      /* Left side */
+      linear-gradient(to top left,
+        transparent 49.5%,var(--c) 50% calc(50% + var(--t)),
+        transparent calc(50% + var(--t) + 1px)) right/30% 100%,
+      /* right side */
+      linear-gradient(to top right,
+        transparent 49.5%,var(--c) 50% calc(50% + var(--t)),
+        transparent calc(50% + var(--t) + 1px)) left/30% 100%,
+      /* bottom side*/
+      linear-gradient(var(--c),var(--c)) top/calc(100% - 2*var(--t)) var(--t);
     background-repeat:no-repeat;
     margin-left: -2px;
     margin-top: 1px;
@@ -76,15 +102,15 @@
     
     background:
       /* Left side */
-      linear-gradient(to bottom left,
+      linear-gradient(to top left,
         transparent 49.5%,var(--c) 50% calc(50% + var(--t)),
         transparent calc(50% + var(--t) + 1px)) right/50% 100%,
       /* right side */
-      linear-gradient(to bottom right,
+      linear-gradient(to top right,
         transparent 49.5%,var(--c) 50% calc(50% + var(--t)),
         transparent calc(50% + var(--t) + 1px)) left/50% 100%,
       /* bottom side*/
-      linear-gradient(var(--c),var(--c)) bottom/calc(100% - 2*var(--t)) var(--t);
+      linear-gradient(var(--c),var(--c)) top/calc(100% - 2*var(--t)) var(--t);
     background-repeat:no-repeat;
     margin-left: -2px;
     margin-top: 1px;
