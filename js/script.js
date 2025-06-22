@@ -12,6 +12,20 @@ function selAll(){
         elem.click();
     });
 }
+function selRow(input){
+    let sel=input.closest('tr').querySelector('[name=sel]');
+    if(!sel.checked){
+    sel.click();
+    }
+}
+function confirmDel(e){
+    if (confirm("sure to delete?")) {
+    return 1;
+    }else{
+      e.preventDefault();
+      return 0;
+    }
+  }
 
 function handleIntNum(){
     const checkArr = document.querySelectorAll("input[type=checkbox]");

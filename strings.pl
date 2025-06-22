@@ -34,7 +34,7 @@ sub trace_form{
     return $txt;
 }
 sub interface_type_select{
-    my $int_type=qq(<select name="interface_type" id="interface_type">);
+    my $int_type=qq(<select name="interface_type" id="interface_type" onfocus="selRow(this)">);
     my $types=Service::interfaces_get_types();
     foreach my $type (@{$types}){
         $int_type.=qq(<option value="$type->{interface_type_id}">$type->{interface_type_name}</option>);

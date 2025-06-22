@@ -74,7 +74,7 @@ sub list_dev{
                 <form action="" method="post">
                 <input type="hidden" name="devices" value="devices">
                 <input type="hidden" name="device_id" value="$device->{device_id}">
-                    <input type="submit" name="remove_device_btn" value="Delete"/>
+                    <input type="submit" name="remove_device_btn" value="Delete" onclick="confirmDel(event)"/>
                     <input type="submit" name="edit_device_btn" value="Edit"/>
                     <button>BTN B</button>
                     <button>BTN C</button>
@@ -188,8 +188,8 @@ sub edit_device{
         $html.=qq(
             <tr>
             <td><input type="checkbox" name="sel" value="$int_id"/></td>
-            <td><input type="number" name="int_number[$int_id]" value="$interface->{interface_number}" style="width:60px;"/></td>
-            <td><input type="text" name="int_name[$int_id]" value="$interface->{interface_name}" /></td>
+            <td><input type="number" name="int_number[$int_id]" value="$interface->{interface_number}" onfocus="selRow(this)" style="width:60px;"/></td>
+            <td><input type="text" name="int_name[$int_id]" value="$interface->{interface_name}" onfocus="selRow(this)" /></td>
             <td>$int_type</td>
             </tr>
         );
