@@ -88,13 +88,13 @@ perlPost:function(args,action){
     })
 },
 menuListener:function(){
-    const elements=document.querySelectorAll(".dev_title");
+    const elements=document.querySelectorAll(".dev_title > span");
     for (let i = 0; i < elements.length; i++) {
         elements[i].addEventListener("click",handler.menuToggle);
     }
 },
 menuToggle:function(event){
-    const elem=event.target;
+    const elem=event.target.parentElement;
     elem.querySelector(".inline_menu").classList.toggle("show");
 },
 addClickListener:function(handlerName){
