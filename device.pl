@@ -61,15 +61,13 @@ sub update_device{
     }
     return $result;
 }
-sub list_dev{
-    my $devices=Service::devices_get();
-    my $html="<h4>Devices</h4>";
-    my $html="<div class='devices'>";
-    foreach my $device (@$devices){
-        $html.=qq(
+sub render_device{
+    my $device=shift;
+    my $html="";
+    $html.=qq(
             <div id="$device->{device_id}" class="device">
             <div class="dev_title">
-                $device->{device_name}
+                <span>$device->{device_name}</span>
                 <div class="inline_menu">
                 <form action="" method="post">
                 <input type="hidden" name="devices" value="devices">
@@ -83,13 +81,23 @@ sub list_dev{
             </div>
             <div class="interfaces">
             );
-            foreach my $interface (@{$device->{interfaces}}){
+    foreach my $interface (@{$device->{interfaces}}){
                 my $class=Strings::int_type_class($interface->{interface_type});
                 $html.=qq(
                     <div class="$class">$interface->{interface_number}</div>
                 );
             }
             $html.="</div></div>";
+    return $html;
+    
+}
+sub list_dev{
+    my $devices=Service::devices_get();
+    my $html="<h4>Devices</h4>";
+    my $html="<div class='devices'>";
+    foreach my $device (@$devices){
+        $html.=&render_device($device);
+            
     }
     $html.="</div>";
     $html.=qq(<script>handler.menuListener()</script>);
@@ -200,6 +208,7 @@ sub edit_device{
         <input type="submit" name="update_device_btn" value="Update" />
         </form>
         );
+    $html .=&render_device($device);
     $html.=qq(
         <p>TODO:</p>
         <p>ADD ability to create new interfaces;</p>
