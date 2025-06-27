@@ -35,7 +35,11 @@ sub handle{
         return &edit_device($input->{device_id});
     }
     elsif($input->{update_device_btn}){
-        return &update_device();
+         &update_device();
+    return &edit_device($input->{device_id});
+    }
+    elsif($input->{update_virt}){
+        return Service::virt_update();
     }
     else{
         return Dumper($input);
@@ -84,7 +88,7 @@ sub render_device{
     foreach my $interface (@{$device->{interfaces}}){
                 my $class=Strings::int_type_class($interface->{interface_type});
                 $html.=qq(
-                    <div class="$class">$interface->{interface_number}</div>
+                    <div id="i$interface->{interface_id}" member-of="$interface->{virtual_id}" int-type="$interface->{interface_type}" class="$class">$interface->{interface_number}</div>
                 );
             }
             $html.="</div></div>";
@@ -208,7 +212,9 @@ sub edit_device{
         <input type="submit" name="update_device_btn" value="Update" />
         </form>
         );
-    $html .=&render_device($device);
+    $html.=edit_virtual_members($device);
+
+    # $html .=&render_device($device);
     $html.=qq(
         <p>TODO:</p>
         <p>ADD ability to create new interfaces;</p>
@@ -217,6 +223,27 @@ sub edit_device{
         <p>int num, int name, int type CAN be changed</p>
         );
     return $html;
+
+}
+sub edit_virtual_members{
+    my $device=shift;
+    my $interfaces=$device->{interfaces};
+    my @virt=grep { 3 == $_->{interface_type} } @$interfaces;
+    return if scalar @virt == 0;
+    my $sel=qq(<select name="virt_id" id="virt_id">);
+    foreach my $interface (@virt){
+        $sel.=qq(<option value="$interface->{interface_id}">$interface->{interface_name}</option>);
+    }
+    $sel.="</select>";
+    my $html=qq(<label for="virt_id">Edit virtual members for: </label>);
+    $html.=$sel;
+    $html.="<br>". &render_device($device);
+    $html.="<br><button onclick='handler.saveVirt()'>Save virt</button>";
+    $html.=qq(<script>handler.addClickListener("virt");</script>);
+    return $html;   
+    #create select virt to add members
+    #add js member select from rendered device
+    #update via form ??? or js perlPost???
 
 }
 

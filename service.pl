@@ -84,7 +84,7 @@ sub device_update{
 sub interfaces_get{
     my $device_id=shift;
     my $dbh=init_db();
-    my $q="SELECT interface_id,device_id,interface_number,interface_name,interface_type FROM interfaces WHERE device_id=? ORDER BY interface_number";
+    my $q="SELECT interface_id,device_id,interface_number,interface_name,interface_type,vm.virtual_id FROM interfaces LEFT JOIN virtual_members vm ON interface_id=vm.member_id WHERE device_id=? ORDER BY interface_number";
     my $interfaces=$dbh->selectall_arrayref($q,{Slice=>{}},$device_id);
     $dbh->disconnect();
     return $interfaces;
@@ -125,6 +125,30 @@ sub interfaces_get_types{
     my $types=$dbh->selectall_arrayref($q,{Slice=>{}});
     $dbh->disconnect();
     return $types;
+}
+sub virt_update{
+    my $result="";
+    my $dbh=init_db();
+    my $sth_rem=$dbh->prepare("DELETE FROM virtual_members WHERE virtual_id=? AND member_id=? ;");
+    my $sth_add=$dbh->prepare("INSERT INTO virtual_members(virtual_id,member_id) VALUES (?,?) ;");
+    for my $key ( $cgi->param() ) {
+      if ($key =~ /rem_virt/){
+           $key =~ m/([0-9]+)/;
+           my $virt_id=$1;
+           print $debug Dumper($cgi->param($key));
+          foreach my $member ($cgi->param($key)){
+              $sth_rem->execute($virt_id,$member);
+          }
+      }
+      elsif ($key =~ /add_virt/){
+           $key =~ m/([0-9]+)/;
+           my $virt_id=$1;
+          foreach my $member ($cgi->param($key)){
+              $sth_add->execute($virt_id,$member);
+          }
+      }
+    }
+    return Device::edit_device($input->{device_id});
 }
 sub i2i_save{
     my $ids=shift;

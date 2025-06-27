@@ -50,3 +50,16 @@ function handleIntNum(){
         });
     }
 }
+function printMsg(msg){
+    // if(!msg || "" == msg){
+    //   msg="<h4>Loading graphs... please wait</h4>";
+    // }
+    const msgBox=parent.document.getElementById("infobox");
+    msgBox.innerHTML=msg;
+    setTimeout(() => {
+        // console.log("Delayed for 1 second.");
+        msgBox.innerHTML="";
+      }, 2000);
+      
+    return 1;
+  }

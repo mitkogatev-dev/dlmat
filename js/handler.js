@@ -1,6 +1,41 @@
 
 let handler = (() => {
     return {
+virtUpdate:{
+    add:[],
+    remove:[]
+},
+saveVirt:function(){
+    if (this.virtUpdate.remove.length==0 && this.virtUpdate.add.length==0){return;}
+    let form=document.createElement('form');
+    
+    this.virtUpdate.remove.forEach(pair=>{
+        let inp=document.createElement('input');
+        inp.setAttribute('name',`rem_virt[${pair.virt_id}]`);
+        inp.setAttribute('value',pair.member);
+        form.append(inp);
+    });
+    this.virtUpdate.add.forEach(pair=>{
+        let inp=document.createElement('input');
+        inp.setAttribute('name',`add_virt[${pair.virt_id}]`);
+        inp.setAttribute('value',pair.member);
+        form.append(inp);
+    });
+    let dev=document.createElement("input");
+    dev.setAttribute("name","devices");
+    dev.setAttribute("value","devices");
+    let devId=document.getElementsByName("device_id")[0];
+    form.append(devId.cloneNode(true))
+    let sav=document.createElement("input");
+    sav.setAttribute("name","update_virt");
+    sav.setAttribute("value","update_virt");
+    form.append(dev);
+    form.append(sav);
+    form.setAttribute("method","post");
+    form.setAttribute("action","router.cgi");
+    document.getElementById("bottom").append(form);
+    form.submit();
+},
 zoom: {
     get: function () {
         let container=document.getElementById('svg-container');
@@ -106,9 +141,56 @@ addClickListener:function(handlerName){
     else if ("unlink" === handlerName){
         func=handler.svg.unlink;
     }
+    else if ("virt" === handlerName){
+        const virt_int=document.getElementById("virt_id");
+        virt_int.addEventListener("change",function(){handler.displayMembers(this.value);})
+        this.displayMembers(virt_int.value);
+        func=handler.virtMembers;
+    }
     for (let i = 0; i < elements.length; i++) {
         elements[i].addEventListener("click",func);
     }
+},
+displayMembers:function(virt_id){
+    const elements=document.querySelectorAll("div.interfaces >*");
+    const members=document.querySelectorAll(`div[member-of="${virt_id}"]`);
+    elements.forEach(element => {
+        element.classList.remove("virt_member","selected","disabled");
+        if (element.getAttribute("member-of")!=""){
+            element.classList.add("disabled");
+        }
+        if(element.classList.contains("int_virt")){
+            element.classList.add("disabled");
+        }
+    });
+    document.getElementById("i"+virt_id).classList.add("selected");
+    members.forEach(member => {
+        member.classList.add("virt_member");
+        member.classList.remove("disabled");
+    });
+},
+virtMembers:function(event){
+    const elem=event.target;
+    if (elem.classList.contains("disabled")){return;}
+    const virtId=document.getElementById("virt_id").value;
+    const isVirtual=elem.getAttribute("int-type") == "3";
+    const memberAttr=elem.getAttribute("member-of");
+    const isMember= memberAttr !=="" && memberAttr !== virtId ;
+    if (isVirtual || isMember){
+        printMsg("This interface can't be selected");
+        return;
+    }
+    elem.classList.toggle("virt_member");
+    let memberId=elem.id.substring(1);
+
+    if (elem.classList.contains("virt_member")){
+        //add member
+        handler.virtUpdate.add.push({'virt_id':virtId,'member':memberId});
+    }else{
+        handler.virtUpdate.remove.push({'virt_id':virtId,'member':memberId});
+    }
+
+
 },
 removeClickListener:function(){
     // const elements=document.querySelectorAll("div.interface");

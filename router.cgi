@@ -60,6 +60,7 @@ if($request_method eq "POST"){
     }
 }elsif($request_method eq "GET"){
 $html="GET";
+# print $debug $html;
 }else{
     return 0;
 }
@@ -89,10 +90,11 @@ print qq(
 #*******************
 print qq(
     <body>
-    <div id='infobox'></div>
+    <!--<div id='infobox'></div>-->
     <div id='mainframe'>
     $html
     </div>
+    <div id="bottom" class="hidden"></div>
     </body>
 );
 #DEBUG
