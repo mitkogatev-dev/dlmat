@@ -6,11 +6,11 @@ use strict;
 use FindBin 1.51 qw( $RealBin );
 my $dir=$RealBin;
 use JSON;
+my $debug=Cfg::get_debug();
 
 
 sub init{
     my $html=qq(
-        <p style="color:red;">When int type is ready i2i only for the same type!! eg:wlan to wlan</p>
         <div>
         zoom <span onclick="handler.zoom.in()"><button>+</button></span> or <span onclick="handler.zoom.out()"><button>-</button></span>
         <button id="svgEnBtn" onclick="handler.svg.enableLinking()">enable linking</button>
@@ -32,8 +32,9 @@ sub init{
         );
             foreach my $interface (@{$device->{interfaces}}){
                 my $class=Strings::int_type_class($interface->{interface_type});
+                $class.=" disabled" if defined $interface->{virtual_id};
                 $html.=qq(
-                    <div  id="i$interface->{interface_id}" class="$class" title="$interface->{interface_name}">$interface->{interface_number}</div>
+                    <div  id="i$interface->{interface_id}" int-type="$interface->{interface_type}" member-of="$interface->{virtual_id}" class="$class" title="$interface->{interface_name}">$interface->{interface_number}</div>
                 );
             }
         $html.="</div></div>";
@@ -44,9 +45,7 @@ sub init{
         </svg>
     );
     my $links=to_json(Service::i2i_get());
-    # foreach my $pair(@{$links}){
-    #     $html.="<p>a=$pair->{int_a} | b=$pair->{int_b}</p>";
-    # }
+    
     $html.=qq(
             <script>
             handler.addClickListener("draw");

@@ -81,26 +81,6 @@ hoverEffect:{
           pairedElem.style.background = color;
     },
 },
-hoverEffectOL:function(elem){
-    elem.addEventListener(
-        "mouseenter",
-        (event) => {
-          event.target.style.background = "purple";
-          let pairedElem=document.getElementById(event.target.getAttribute("pair"));
-          pairedElem.style.background = "purple";
-        },
-        false,
-      );
-      elem.addEventListener(
-        "mouseleave",
-        (event) => {
-          event.target.style.background = "";
-          let pairedElem=document.getElementById(event.target.getAttribute("pair"));
-          pairedElem.style.background = "";
-        },
-        false,
-      );
-},
 perlPost:function(args,action){
     let json=JSON.stringify(args);
     fetch("router.cgi", {
@@ -246,10 +226,10 @@ svg:{
         json.forEach(pair => {
             let elemA=document.getElementById("i"+pair.int_a);
             let elemB=document.getElementById("i"+pair.int_b);
-            elemA.setAttribute("pair","i"+pair.int_b);
-            elemB.setAttribute("pair","i"+pair.int_a);
             elemA.click();
             elemB.click();
+            elemA.setAttribute("pair","i"+pair.int_b);
+            elemB.setAttribute("pair","i"+pair.int_a);
             handler.hoverEffect.add(elemA);
             handler.hoverEffect.add(elemB);
         });
@@ -302,6 +282,11 @@ svg:{
     drawLine:function(event){
         if (!handler.svg.linkMode) return; 
         const elem=event.target;
+        if (elem.getAttribute("pair")) return;
+        if (elem.classList.contains("disabled")) return;
+        const elements=document.querySelectorAll("div.interfaces >*");
+        const intType=elem.getAttribute("int-type");
+
         let currPoints=handler.svg.currPoints;
         let polylines=handler.svg.polylines;
         let currIds=handler.svg.currIds;
@@ -329,8 +314,22 @@ svg:{
             handler.svg.currIds=[];
             handler.svg.currPoints=[];
             // console.log(currLine.id());
-        }//end ifconet
-        /////////////////////
+            elements.forEach(e=>{
+                if (e.getAttribute("member-of")==""){
+                  e.classList.remove("disabled");
+                }
+            });
+        }
+        else //first click
+        {
+            elements.forEach(element => {
+                if (element.getAttribute("int-type")!=intType){
+                    element.classList.add("disabled");
+                }
+            });
+            let neigh=Array.from(elem.parentElement.children);
+            neigh.forEach(element => {element.classList.add("disabled");})
+        }
        
     },
 },

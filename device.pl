@@ -107,16 +107,6 @@ sub list_dev{
     $html.=qq(<script>handler.menuListener()</script>);
     return $html;
 }
-sub list_dev_old{
-    my $devices=Service::devices_get();
-    my $html="<h4>Devices</h4>";
-    foreach my $device (@$devices){
-        my $int_count=scalar(@{$device->{interfaces}});
-        $html.="<p>$device->{device_name} interfaces:$int_count </p>";
-    }
-    return $html;
-
-}
 
 sub create_device{
     my $name=$input->{device_name};
@@ -153,12 +143,7 @@ sub create_device{
         );
     return $result;
 }
-sub edit_interfaces_form{
-    my $device=shift;
-    # my $htm
-    return 1;
-    
-}
+
 sub add_dev_form{
     my $txt="<h4>Create new device</h4>";
     $txt.=qq(<form action="" method="post">);
@@ -214,14 +199,6 @@ sub edit_device{
         );
     $html.=edit_virtual_members($device);
 
-    # $html .=&render_device($device);
-    $html.=qq(
-        <p>TODO:</p>
-        <p>ADD ability to create new interfaces;</p>
-        <p>add interface type;</p>
-        <p>if type is virtual add adbility to select physycal members;</p>
-        <p>int num, int name, int type CAN be changed</p>
-        );
     return $html;
 
 }
@@ -241,10 +218,6 @@ sub edit_virtual_members{
     $html.="<br><button onclick='handler.saveVirt()'>Save virt</button>";
     $html.=qq(<script>handler.addClickListener("virt");</script>);
     return $html;   
-    #create select virt to add members
-    #add js member select from rendered device
-    #update via form ??? or js perlPost???
-
 }
 
 return 1;
