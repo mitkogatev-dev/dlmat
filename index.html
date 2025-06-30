@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="css/style.css">
+    <script src="js/script.js"></script>
+    <title>DLMAT</title>
+    
+</head>
+<body>
+    <div class="header"><h2>Dlmat</h2></div>
+    <div id='infobox'></div>
+
+    <div class="row">
+        <div class="side">
+            <form action="router.cgi" method="post" target="frame">
+                <input type="hidden" name="devices" value="devices">
+                <input type="submit" value="add device" name="add_dev_btn">
+                <input type="submit" value="devices" name="show_devices_btn">
+            </form>
+            <form action="router.cgi" method="post" target="frame">
+                <input type="submit" value="links" name="linker_btn">
+            </form>
+            <form action="router.cgi" method="post" target="frame">
+                <input type="hidden" name="tracer" value="tracer">
+                <input type="submit" value="trace" name="tracer_btn">
+            </form>
+        </div>
+
+        <iframe id="frame" name="frame" frameborder="0" scrolling="yes" class="main"  ></iframe>
+    </div>
+    <div class="footer"></div>
+    <div class="clearfix"></div>
+</body>
+</html>

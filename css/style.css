@@ -1,0 +1,84 @@
+* {
+    box-sizing: border-box;
+}
+
+/* Style the body */
+body {
+    font-family: Arial;
+    margin: 0;
+
+}
+.header {
+    padding: 10px;
+    text-align: center;
+    background: #bc1a1a;
+    color: white;
+    /* background: rgb(241,157,39); */
+    /* background: linear-gradient(90deg, rgba(241,157,39,1) 12%, rgba(58,228,31,1) 61%, rgba(8,8,8,1) 100%); */
+}
+
+/* Increase the font size of the heading */
+.header h1 {
+    font-size: 20px;
+}
+
+.side input[type=submit]{
+    width: 90%;
+} 
+
+/* Column container */
+.row {
+    display: -ms-flexbox; /* IE10 */
+    display: flex;
+    -ms-flex-wrap: wrap; /* IE10 */
+    flex-wrap: wrap;
+    min-height: 80vh;
+}
+
+/* Sidebar/left column */
+.side {
+    -ms-flex: 8%; /* IE10 */
+    flex: 8%;
+    background-color: #f1f1f1;
+    padding: 20px;
+    word-break: normal;
+    font-size: 80%;
+}
+
+/* Main column */
+.main {
+    -ms-flex: 90%; /* IE10 */
+    flex: 90%;
+    background-color: white;
+    padding: 20px;
+    font-size: 80%;
+}
+
+
+
+/* Footer */
+.footer {
+    padding: 20px;
+    text-align: center;
+    background: #000000;
+}
+
+/* Responsive layout - when the screen is less than 700px wide, make the two columns stack on top of each other instead of next to each other */
+@media screen and (max-width: 700px) {
+    .row {
+        flex-direction: column;
+    }
+}
+
+/* Responsive layout - when the screen is less than 400px wide, make the navigation links stack on top of each other instead of next to each other */
+@media screen and (max-width: 400px) {
+    .navbar a {
+        float: none;
+        width: 100%;
+    }
+}
+
+.hidden{
+    display: none;
+}
+
